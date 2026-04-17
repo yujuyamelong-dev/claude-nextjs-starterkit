@@ -1,15 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm --version)",
-      "Bash(npm view *)",
+      "Bash",
       "WebFetch(domain:ui.shadcn.com)",
-      "WebSearch",
-      "Bash(npm install *)",
-      "Bash(timeout 10 npm run dev)",
-      "Read(//c/Users/wornt/.claude/plugins/cache/anthropic-agent-skills/example-skills/12ab35c2eb56/skills/webapp-testing/**)",
-      "Bash(python test_app.py)",
-      "Bash(grep -E \"\\\\.\\(tsx|ts|json\\)$\")"
+      "WebSearch"
     ]
   }
 }

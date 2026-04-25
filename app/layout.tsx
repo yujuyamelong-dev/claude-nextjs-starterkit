@@ -6,24 +6,22 @@ import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: {
-    default: "Claude Next.js Starter Kit",
-    template: "%s | Claude Next.js Starter Kit",
+    default: "Invoice Web",
+    template: "%s | Invoice Web",
   },
-  description:
-    "프로덕션 레디한 Next.js 15 스타터 킷. shadcn/ui, TailwindCSS v4, TypeScript를 포함합니다.",
-  keywords: ["Next.js", "React", "TypeScript", "TailwindCSS", "shadcn/ui"],
-  authors: [{ name: "Claude" }],
-  creator: "Claude",
+  description: "Notion 견적서를 웹 링크로 공유하고 PDF로 저장하는 서비스",
+  keywords: ["견적서", "invoice", "Notion", "프리랜서", "PDF"],
+  authors: [{ name: "Invoice Web" }],
   openGraph: {
     type: "website",
     locale: "ko_KR",
-    title: "Claude Next.js Starter Kit",
-    description: "프로덕션 레디한 Next.js 15 스타터 킷",
-    siteName: "Claude Next.js Starter Kit",
+    title: "Invoice Web",
+    description: "Notion 견적서를 웹 링크로 공유하고 PDF로 저장하는 서비스",
+    siteName: "Invoice Web",
   },
   robots: {
-    index: true,
-    follow: true,
+    index: false,
+    follow: false,
   },
 };
 

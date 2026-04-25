@@ -1,183 +1,132 @@
-# Claude Next.js Starter Kit
+# Invoice Web
 
-프로덕션 레디한 Next.js 15 스타터 킷입니다. 최신 기술 스택과 모범 사례를 포함하고 있습니다.
+Notion에서 작성한 견적서를 클라이언트가 웹 링크로 즉시 확인하고 PDF로 저장할 수 있는 서비스입니다.
+
+## 프로젝트 개요
+
+**목적**: 프리랜서/1인 사업자가 Notion에서 작성한 견적서를 클라이언트에게 공유 링크로 전달하고, 클라이언트는 별도 계정 없이 웹에서 확인 후 PDF로 저장
+**사용자**: 견적서를 발송하는 프리랜서 및 1인 사업자 / 링크를 받아 견적서를 확인하는 클라이언트
+
+## 주요 페이지
+
+1. **견적서 목록** (`/`) - 프리랜서 전용 관리 화면. 발행된 견적서 목록 확인 및 공유 링크 복사
+2. **견적서 상세** (`/invoice/[id]`) - 클라이언트용 공개 페이지. Notion 견적서 열람 및 PDF 저장
+3. **404 안내** - 존재하지 않는 견적서 접근 시 안내
+
+## 핵심 기능
+
+- **F001** Notion 견적서 조회: Notion API로 견적서 데이터 가져와 렌더링
+- **F002** 견적서 목록 조회: Notion 데이터베이스에서 전체 견적서 목록 표시
+- **F003** 공유 링크 생성: 견적서별 고유 URL 생성 및 클립보드 복사
+- **F004** PDF 다운로드: 브라우저 Print API(`window.print()`)로 PDF 저장
 
 ## 기술 스택
 
-- **Next.js 15.5** - App Router, React Server Components
-- **React 19** - 최신 React 기능
-- **TypeScript 5.3** - 엄격한 타입 체크
-- **TailwindCSS v4** - CSS-first 설정 (tailwind.config.js 없음)
-- **shadcn/ui** - Radix UI 기반 접근 가능한 컴포넌트
-- **lucide-react** - 아이콘 라이브러리
-- **next-themes** - 다크모드 지원
+- **Framework**: Next.js 15 (App Router)
+- **Runtime**: React 19
+- **Language**: TypeScript 5.6+
+- **Styling**: TailwindCSS v4 (설정 파일 없음, `globals.css` 기반)
+- **UI Components**: shadcn/ui (New York 스타일)
+- **Icons**: Lucide React
+- **Notion 연동**: @notionhq/client
+- **스키마 검증**: Zod
+- **배포**: Vercel
 
-## 설치 및 실행
+## 시작하기
 
 ### 1. 의존성 설치
+
 ```bash
 npm install
 ```
 
-### 2. 개발 서버 시작
+### 2. 환경변수 설정
+
+```bash
+cp .env.example .env.local
+```
+
+`.env.local` 파일을 열어 아래 항목을 설정합니다:
+
+```env
+NOTION_TOKEN=secret_xxxx          # Notion Integration Token
+NOTION_DATABASE_ID=xxxx           # 견적서 데이터베이스 ID
+ADMIN_PASSWORD=your-password      # 목록 페이지 접근 비밀번호
+```
+
+### 3. 개발 서버 실행
+
 ```bash
 npm run dev
 ```
 
 브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어보세요.
 
-### 3. 프로덕션 빌드
+### 4. 빌드 및 배포
+
 ```bash
 npm run build
 npm run start
 ```
 
+## Notion 설정 가이드
+
+1. [Notion Integrations](https://www.notion.so/my-integrations)에서 새 Integration 생성
+2. Integration Token 복사 → `NOTION_TOKEN`에 설정
+3. 견적서 데이터베이스 열기 → 우측 상단 `...` → `Add connections` → 생성한 Integration 연결
+4. 데이터베이스 URL에서 ID 추출 → `NOTION_DATABASE_ID`에 설정
+
+### Notion 데이터베이스 필드 구성
+
+| 필드명 | 타입 | 설명 |
+|--------|------|------|
+| 제목 (Name) | 제목 | 견적서 제목 |
+| 클라이언트 | 텍스트 | 클라이언트명 |
+| 발행사 | 텍스트 | 프리랜서/회사명 |
+| 발행일 | 날짜 | 견적서 발행일 |
+| 지급 기한 | 날짜 | 결제 기한 |
+| 상태 | 선택 | 초안 / 발행 |
+| 합계 | 숫자 | 총 견적 금액 |
+| 메모 | 텍스트 | 추가 안내사항 |
+
+## 개발 명령어
+
+```bash
+npm run dev        # 개발 서버 (포트 3000)
+npm run build      # 프로덕션 빌드
+npm run start      # 빌드된 앱 실행
+npm run lint       # ESLint 검사
+npm run typecheck  # TypeScript 타입 검사
+```
+
 ## 프로젝트 구조
 
 ```
-claude-nextjs-starterkit/
-├── app/                      # Next.js App Router
-│   ├── layout.tsx           # 루트 레이아웃 (Geist 폰트)
-│   ├── page.tsx             # 홈 페이지
-│   ├── globals.css          # TailwindCSS v4 설정
-│   └── providers.tsx        # next-themes ThemeProvider
-├── components/
-│   ├── layout/              # 레이아웃 컴포넌트
-│   │   ├── header.tsx       # 헤더 (다크모드 토글, 모바일 메뉴)
-│   │   └── footer.tsx       # 푸터
-│   └── ui/                  # shadcn/ui 컴포넌트
-│       ├── button.tsx
-│       ├── card.tsx
-│       ├── badge.tsx
-│       ├── input.tsx
-│       ├── label.tsx
-│       ├── separator.tsx
-│       ├── avatar.tsx
-│       ├── dialog.tsx
-│       ├── sheet.tsx
-│       ├── dropdown-menu.tsx
-│       ├── navigation-menu.tsx
-│       └── tooltip.tsx
-├── lib/
-│   └── utils.ts            # cn() 유틸리티 함수
-├── components.json         # shadcn/ui 설정
-├── tsconfig.json           # TypeScript 설정
-├── next.config.ts          # Next.js 설정
-├── postcss.config.mjs      # PostCSS 설정
-└── package.json            # 의존성
+app/
+├── layout.tsx              # 루트 레이아웃 (Geist 폰트, ThemeProvider)
+├── page.tsx                # 홈 (견적서 목록, 서버 컴포넌트)
+├── not-found.tsx           # 404 안내 페이지
+├── globals.css             # TailwindCSS v4 + 색상 토큰 + 인쇄 스타일
+├── providers.tsx           # next-themes ThemeProvider
+└── invoice/
+    └── [id]/
+        └── page.tsx        # 견적서 상세 (공개 접근)
+
+components/
+├── layout/
+│   ├── header.tsx          # 헤더 (다크모드 토글)
+│   └── footer.tsx          # 푸터
+├── invoice/
+│   ├── invoice-list.tsx    # 견적서 목록 카드 + 링크 복사
+│   └── invoice-detail.tsx  # 견적서 상세 뷰 + PDF 저장
+└── ui/                     # shadcn/ui 컴포넌트
+
+lib/
+├── utils.ts                # cn() 유틸리티
+└── notionClient.ts         # Notion API 클라이언트 + 타입 정의
 ```
 
-## 주요 기능
+## 문서
 
-### ✅ TailwindCSS v4 (설정 파일 없음)
-- `@import "tailwindcss"` 한 줄로 시작
-- `@theme inline { }` 블록으로 색상 토큰 정의
-- OKLCH 색상 형식 사용
-- `.dark` 클래스로 다크모드 지원
-
-### ✅ shadcn/ui Components
-- 12개 이상의 접근 가능한 컴포넌트
-- Radix UI 프리미티브 기반
-- CSS 변수로 테마 커스터마이징
-- TypeScript 완벽 지원
-
-### ✅ 다크모드
-- next-themes로 시스템 인식 다크모드
-- 페이지 새로고침 시 깜박거림 없음
-- Header의 토글 버튼으로 즉시 전환
-
-### ✅ 반응형 디자인
-- Tailwind 그리드 시스템
-- 모바일 최적화
-- 모바일 메뉴 (Sheet 컴포넌트)
-
-### ✅ 최신 패턴
-- React Server Components 기본값
-- 클라이언트 아일랜드 선택적 배치
-- `"use client"` 지시어 최소화
-- Metadata API 사용
-
-## 공식 문서 준수
-
-이 스타터 킷은 **2026년 최신 공식 문서**를 100% 준수합니다:
-
-- ✅ [Next.js 15 설치 가이드](https://nextjs.org/docs/app/getting-started/installation)
-- ✅ [TailwindCSS v4 + Next.js](https://tailwindcss.com/docs/installation/framework-guides/nextjs)
-- ✅ [shadcn/ui 설치 가이드](https://ui.shadcn.com/docs/installation/next)
-
-## 시작하기
-
-### 새 페이지 추가
-```tsx
-// app/about/page.tsx
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-
-export default function AboutPage() {
-  return (
-    <>
-      <Header />
-      <main className="min-h-screen">
-        {/* 내용 */}
-      </main>
-      <Footer />
-    </>
-  );
-}
-```
-
-### UI 컴포넌트 사용
-```tsx
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-export default function Component() {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>카드 제목</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Button>클릭하기</Button>
-      </CardContent>
-    </Card>
-  );
-}
-```
-
-### 색상 커스터마이징
-`app/globals.css`의 `:root` 또는 `.dark` 블록에서 CSS 변수를 수정합니다:
-
-```css
-:root {
-  --primary: oklch(0.5 0.18 260);  /* 파란색 */
-  --destructive: oklch(0.577 0.245 27.325);  /* 빨간색 */
-}
-```
-
-## 개발 팁
-
-### ESLint & TypeScript
-```bash
-npm run lint
-```
-
-### IDE 설정
-VS Code에서 TypeScript 버전을 워크스페이스 버전으로 설정하면 자동 완성이 개선됩니다.
-
-### 성능
-- Next.js Turbopack은 기본값으로 활성화됨
-- 이미지는 Next.js `Image` 컴포넌트 사용
-- 번들 크기 최적화: 필요한 컴포넌트만 import
-
-## 라이선스
-
-MIT
-
-## 참고 링크
-
-- [Next.js 문서](https://nextjs.org/docs)
-- [React 문서](https://react.dev)
-- [TailwindCSS 문서](https://tailwindcss.com)
-- [shadcn/ui 문서](https://ui.shadcn.com)
-- [Radix UI 문서](https://www.radix-ui.com)
+- [PRD 문서](./docs/PRD.md) - 상세 요구사항
+- [개발 가이드](./CLAUDE.md) - 개발 지침

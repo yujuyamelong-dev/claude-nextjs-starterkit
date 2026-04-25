@@ -2,8 +2,16 @@
   "permissions": {
     "allow": [
       "Bash",
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
       "WebFetch(domain:ui.shadcn.com)",
-      "WebSearch"
+      "WebSearch",
+      "mcp__shrimp-task-manager",
+      "Skill(update-config)",
+      "Bash(curl -s http://localhost:3000)"
     ]
   }
 }
